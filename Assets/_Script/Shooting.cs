@@ -9,6 +9,9 @@ public class Shooting : MonoBehaviour
     public Transform spawnPoint2;
     public GameObject flash;
     public float bulletSpawnTime = 1f;
+
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +37,7 @@ public class Shooting : MonoBehaviour
         {
             yield return new WaitForSeconds(bulletSpawnTime);
             Fire();
+            audioSource.Play();
             flash.SetActive(true);
             yield return new WaitForSeconds(0.04f);
             flash.SetActive(false);

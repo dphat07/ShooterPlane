@@ -12,7 +12,16 @@ public class EnemyScript : MonoBehaviour
     public GameObject explosionPrefab;
     public HealthBar healthBar;
     public GameObject damageEffect;
+    public GameObject coinPrefab;
+
+
     public float enemyBulletSpawnTime = 0.5f;
+
+    public AudioClip bulletSound;
+    public AudioClip damageSound;
+    public AudioClip explosionSound;
+    public AudioSource audioSource;
+
 
     public float health = 10f;
     float damage = 0f;
@@ -30,12 +39,15 @@ public class EnemyScript : MonoBehaviour
     {
         if (collision.tag == "PlayerBullet")
         {
+            audioSource.PlayOneShot(damageSound, 0.5f);
             DamageHealthBar();
             Destroy(collision.gameObject);
             GameObject damageVFx =  Instantiate(damageEffect, collision.transform.position, Quaternion.identity);
             Destroy(damageVFx, 0.05f);
             if (health <=0)
             {
+                AudioSource.PlayClipAtPoint(explosionSound, Camera.main.transform.position, 0.5f);
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);   
                 Destroy(gameObject);
                 GameObject enemyExplosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
                 Destroy(enemyExplosion, 0.6f);
@@ -76,6 +88,7 @@ public class EnemyScript : MonoBehaviour
         {
             yield return new WaitForSeconds(enemyBulletSpawnTime);
             EnemyFire();
+            audioSource.PlayOneShot(bulletSound, 0.5f);
             enemyFlash.SetActive(true);
             yield return new WaitForSeconds(0.04f);
             enemyFlash.SetActive(false);
